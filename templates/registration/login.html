@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Login Page{% endblock %}
+
+{% block content %}
+
+    <p>Login</p>
+    <div class="row">
+        <div class="col-auto">
+            <form method="post">
+                {% csrf_token %}
+                {{ login_form.as_p }}
+
+                <button type="submit" class="btn btn-primary">Login</button> 
+                <span class="ms-3">Accountingiz bo'lmasa <a href="{% url 'users:register' %}">ro'yxatdan</a> o'tishingiz mumkin.</span>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

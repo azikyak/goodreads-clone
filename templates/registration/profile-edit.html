@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile Edit Page {% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-6">
+            <form action="{% url 'users:profile-edit' request.user.username %}" method="post">
+                {% csrf_token %}
+
+                {{ update_form.as_p }}
+
+                <button type="submit" class="btn btn-success">Saqlash</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
