@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Detail Page{% endblock %}
+
+{% block content %}
+
+    <h3>Book Detail Page</h3><br>
+
+    <div class="row mb-3">
+        <div class="col-6">
+            <p><a href="{% url 'book:books-detail' book.pk %}">{{ book.title }}</a></p>
+            <img src="{{ book.cover_picture.url }}" alt="Book cover picture"><br><br>
+            
+            {{ book.description }}
+
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ review_form.as_p }}
+
+                <button type="submit" class="btn btn-primary">Add review</button>
+            </form><br>
+
+            {% for review in reviews %}
+                <p>
+                    {{ review.comment }}
+                    {{ review.book }}
+                    {{ review.user }}
+                    {{ review.stars }}
+                    {{ review.created_time }}
+                </p>
+                
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Book List Page{% endblock %}
+
+
+{% block content %}
+
+    <h3>Book List Page</h3><br>
+
+    {% for book in books %}
+        <div class="row mb-3">
+            <div class="col-6">
+                <p><a href="{% url 'book:books-detail' book.pk %}">{{ book.title }}</a></p>
+                <img src="{{ book.cover_picture.url }}" alt="Book cover picture"><br><br>
+
+
+                {{ book.description | truncatewords:30 }}
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}
