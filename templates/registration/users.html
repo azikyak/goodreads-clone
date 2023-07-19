@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %} All Users Page {% endblock %}
+
+{% block content %}
+    <h3>All Users Page</h3><br>
+
+    <div class="row-5">
+        {% for user in users %}
+        <div class="col-6">
+            <div class="image d-flex flex-column justify-content-center align-items-center">
+                <img class="profile-pic" alt="Profile picture" src="{{ user.profile_picture.url }}">
+                <span class="name mt-3">{{ user.first_name }} {{ user.last_name }}</span>
+                <span class="idd">@{{ user.username }}</span>
+                <span class="idd">{{ user.email }}</span>
+                <div class=" px-2 rounded mt-4 date "> <span class="join">Joined {{ user.date_joined | date:"M d, Y" }}</span> </div>
+
+                {% if request.user.is_authenticated and request.user != user %}
+                    <form action="{% url 'users:add-friend' user.pk %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Add Friend</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+{% endblock content %}

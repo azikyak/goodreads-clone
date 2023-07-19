@@ -6,7 +6,7 @@
 
     <div class="row">
         <div class="col-6">
-            <form action="{% url 'users:profile-edit' request.user.username %}" method="post">
+            <form action="{% url 'users:profile-edit' request.user.username %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 {{ update_form.as_p }}

@@ -1,9 +1,11 @@
-from django.shortcuts import redirect, render
+from django.http import Http404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import User
+from users.models import User, Friends, FriendsRequest
 from .forms import RegisterForm, UserUpdateForm
 
 class RegisterView(View):
@@ -61,12 +63,12 @@ class LoginView(View):
                 }
             )
 
-class LogoutView(View):
+class LogoutView(View, LoginRequiredMixin):
     def get(self, request):
         logout(request)
         return redirect("landing_page")
 
-class ProfileView(View):
+class ProfileView(View, LoginRequiredMixin):
     def get(self, request, username):
         return render(
             request,
@@ -76,7 +78,7 @@ class ProfileView(View):
             }
         )
 
-class ProfileEditView(View):
+class ProfileEditView(View, LoginRequiredMixin):
     def get(self, request, username):
         update_form = UserUpdateForm(instance=request.user)
         return render(
@@ -91,7 +93,7 @@ class ProfileEditView(View):
         update_form = UserUpdateForm(
             instance=request.user,
             data=request.POST,
-            files=request.FILES
+            files=request.FILES,
         )
         if update_form.is_valid():
             update_form.save()
@@ -104,3 +106,33 @@ class ProfileEditView(View):
                     "update_form":update_form,
                 }
             )
+            
+            
+class AllUsersView(View):
+    def get(self, request):
+        users = User.objects.all().order_by("pk")
+        return render(request, 'registration/users.html',
+                      {
+                          "users":users,
+                      })
+
+
+class AddFriendsView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        to_user = get_object_or_404(User,pk=pk)
+        Friends.objects.add_friend(from_user=request.user,to_user=to_user)
+        ls = Friends.objects.friends(request.user)
+        print(*ls)
+        return redirect("users:all-users")
+
+class AcceptFriendRequest(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        from_user = User.objects.get(pk=pk)
+        FriendsRequest.objects.get(from_user=from_user,to_user=request.user).accept()
+        return redirect("home_page")
+    
+class RejectFriendRequest(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        from_user = User.objects.get(pk=pk)
+        FriendsRequest.objects.get(from_user=from_user,to_user=request.user).rejected()
+        return redirect("home_page")

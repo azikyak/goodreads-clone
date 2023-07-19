@@ -3,10 +3,44 @@
 {% block title %} Home Page {% endblock %}
 
 {% block content %}
-    <h3>All reviews</h3>
 
     <div class="row-4">
+        {% if request.user.is_authenticated %}
         <div class="col-6">
+            {% if friend_requested_users.size > 0 %}
+                <h3>Friend Requested users</h3> <br>
+                {% for user in friend_requested_users %}
+                    <div class="card" style="width: 18rem;">
+                        <img src="{{ user.from_user.profile_picture.url }}" class="card-img-top" alt="User picture">
+                        <div class="card-body">
+                        <h5 class="card-title">@{{ user.from_user.username }}</h5> wanted to be your friend
+                        </div>
+                        <div class="card-body">
+                        <a href="{% url 'users:accept_friend_request' user.from_user.pk %}" class="card-link  btn btn-success">Accept</a>
+                        <a href="{% url 'users:reject_friend_request' user.from_user.pk %}" class="card-link btn btn-danger">Reject</a>
+                        </div>
+                    </div>
+                    <br><br>
+                {% endfor %}
+            {% endif %}
+            {% if friends.size > 0 %}
+                <h3>Friends List</h3> <br>
+                {% for user in friends %}
+                    <div class="card" style="width: 18rem;">
+                        <img src="{{ user.profile_picture.url }}" class="card-img-top" alt="User picture">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">{{ user.first_name }} {{ user.last_name }}</li>
+                            <li class="list-group-item">@{{ user.username }}</li>
+                            <li class="list-group-item">{{ user.email }}</li>
+                        </ul>
+                    </div>
+                    <br><br>
+                {% endfor %}
+            {% endif %}
+        </div>
+        {% endif %}
+        <div class="col-6">
+            <h3>All reviews </h3>
             {% for review in reviews %}
                 {{ review.comment }}<br>
                 commented and given {{ review.stars }} stars at {{ review.created_time | date:"M d, Y" }} to {{ review.book }} {{ review.user }}
