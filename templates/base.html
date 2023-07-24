@@ -4,6 +4,7 @@
 {% url 'users:profile' as profile_page_url %}
 {% url 'users:profile-edit' as profile_edit_page_url %}
 {% url 'users:all-users' as all_users_page_url %}
+{% url 'friends:friends' as friends_page_url %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -37,6 +38,9 @@
         </li>
         <li class="nav-item">
           <a class="nav-link {% if request.path == all_users_page_url %} active {% endif %}" aria-current="page" href="{{ all_users_page_url }}">Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == friends_page_url %} active {% endif %}" aria-current="page" href="{{ friends_page_url }}">Friends</a>
         </li>
       </ul>
 

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %} Friends Page {% endblock %}
+
+{% block content %}
+
+    <div class="row-6">
+        <div class="col-6">
+            {% if friends %}
+                <h3>Friends List</h3> <br>
+                {% for user in friends %}
+                    <div class="card" style="width: 18rem;">
+                        <img src="{{ user.profile_picture.url }}" class="card-img-top" alt="User picture">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">{{ user.first_name }} {{ user.last_name }}</li>
+                            <li class="list-group-item">@{{ user.username }}</li>
+                            <li class="list-group-item">{{ user.email }}</li>
+                        </ul>
+                    </div>
+                    <br><br>
+                {% endfor %}
+            {% endif %}
+            {% if friend_requested_users %}
+                <h3>Friend Requested users</h3> <br>
+                {% for user in friend_requested_users %}
+                    <div class="card" style="width: 18rem;">
+                        <img src="{{ user.from_user.profile_picture.url }}" class="card-img-top" alt="User picture">
+                        <div class="card-body">
+                        <h5 class="card-title">@{{ user.from_user.username }}</h5> wanted to be your friend
+                        </div>
+                        <div class="card-body">
+                        <a href="{% url 'friends:accept_friend_request' user.from_user.pk %}" class="card-link  btn btn-success">Accept</a>
+                        <a href="{% url 'friends:reject_friend_request' user.from_user.pk %}" class="card-link btn btn-danger">Reject</a>
+                        </div>
+                    </div>
+                    <br><br>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    
+{% endblock %}

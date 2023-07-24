@@ -15,10 +15,16 @@
                 <span class="idd">{{ user.email }}</span>
                 <div class=" px-2 rounded mt-4 date "> <span class="join">Joined {{ user.date_joined | date:"M d, Y" }}</span> </div>
 
-                {% if request.user.is_authenticated and request.user != user %}
-                    <form action="{% url 'users:add-friend' user.pk %}" method="post">
+                {% if request.user.is_authenticated and request.user != user and request.user not in friends %}
+                    <form action="{% url 'friends:add-friend' user.pk %}" method="post">
                         {% csrf_token %}
                         <button type="submit">Add Friend</button>
+                    </form>
+                {% endif %}
+                {% if request.user.is_authenticated and request.user != user and request.user in friend_requested %}
+                    <form action="{% url 'friends:add-friend' user.pk %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Cancel</button>
                     </form>
                 {% endif %}
             </div>

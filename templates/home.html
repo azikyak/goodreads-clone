@@ -5,7 +5,7 @@
 {% block content %}
 
     <div class="row-4">
-        {% if request.user.is_authenticated %}
+        <!-- {% if request.user.is_authenticated %}
         <div class="col-6">
             {% if friend_requested_users.size > 0 %}
                 <h3>Friend Requested users</h3> <br>
@@ -38,7 +38,7 @@
                 {% endfor %}
             {% endif %}
         </div>
-        {% endif %}
+        {% endif %} -->
         <div class="col-6">
             <h3>All reviews </h3>
             {% for review in reviews %}
