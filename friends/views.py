@@ -10,10 +10,12 @@ class FriendsView(LoginRequiredMixin, View):
     def get(self, request):
         friends = Friends.objects.friends(request.user)
         friend_requested_users = FriendsRequest.objects.filter(to_user=request.user)
+        recommended_friends = Friends.objects.recommended_friends(request.user)
         return render(request,"friends/friends.html",
                       {
                           "friends":friends,
                           "friend_requested_users":friend_requested_users,
+                          "recommended_friends":recommended_friends,
                       })
 
 
@@ -42,3 +44,10 @@ class RejectFriendRequest(LoginRequiredMixin, View):
         from_user = User.objects.get(pk=pk)
         FriendsRequest.objects.get(from_user=from_user,to_user=request.user).rejected()
         return redirect("friends:friends")
+
+
+class RemoveFriendList(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        friend = User.objects.get(pk=pk)
+        Friends.objects.remove_friend(from_user=request.user,to_user=friend)
+        return redirect("friends:friends")  

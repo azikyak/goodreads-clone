@@ -15,6 +15,13 @@
                             <li class="list-group-item">{{ user.first_name }} {{ user.last_name }}</li>
                             <li class="list-group-item">@{{ user.username }}</li>
                             <li class="list-group-item">{{ user.email }}</li>
+                            <li class="list-group-item">
+                                <form action="{% url "friends:remove_friend_list" user.pk %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="user_id" value="{{ user.pk }}">
+                                    <input type="submit" value="Remove Friend List" class="btn btn-danger">
+                                </form>
+                            </li>
                         </ul>
                     </div>
                     <br><br>
@@ -29,8 +36,44 @@
                         <h5 class="card-title">@{{ user.from_user.username }}</h5> wanted to be your friend
                         </div>
                         <div class="card-body">
-                        <a href="{% url 'friends:accept_friend_request' user.from_user.pk %}" class="card-link  btn btn-success">Accept</a>
-                        <a href="{% url 'friends:reject_friend_request' user.from_user.pk %}" class="card-link btn btn-danger">Reject</a>
+                            <form action="{% url 'friends:accept_friend_request' user.from_user.pk %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ user.from_user.pk }}">
+                                <input type="submit" value="Accept" class="btn btn-success">
+                            </form>
+                            <form action="{% url 'friends:reject_friend_request' user.from_user.pk %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ user.from_user.pk }}">
+                                <input type="submit" value="Reject" class="btn btn-danger">
+                            </form>
+                        <!-- <a href="{% url 'friends:accept_friend_request' user.from_user.pk %}" class="card-link  btn btn-success">Accept</a>
+                        <a href="{% url 'friends:reject_friend_request' user.from_user.pk %}" class="card-link btn btn-danger">Reject</a> -->
+                        </div>
+                    </div>
+                    <br><br>
+                {% endfor %}
+            {% endif %}
+            {% if recommended %}
+                <h3>Friend Requested users</h3> <br>
+                {% for user in friend_requested_users %}
+                    <div class="card" style="width: 18rem;">
+                        <img src="{{ user.from_user.profile_picture.url }}" class="card-img-top" alt="User picture">
+                        <div class="card-body">
+                        <h5 class="card-title">@{{ user.from_user.username }}</h5> wanted to be your friend
+                        </div>
+                        <div class="card-body">
+                            <form action="{% url 'friends:accept_friend_request' user.from_user.pk %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ user.from_user.pk }}">
+                                <input type="submit" value="Accept" class="btn btn-success">
+                            </form>
+                            <form action="{% url 'friends:reject_friend_request' user.from_user.pk %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ user.from_user.pk }}">
+                                <input type="submit" value="Reject" class="btn btn-danger">
+                            </form>
+                        <!-- <a href="{% url 'friends:accept_friend_request' user.from_user.pk %}" class="card-link  btn btn-success">Accept</a>
+                        <a href="{% url 'friends:reject_friend_request' user.from_user.pk %}" class="card-link btn btn-danger">Reject</a> -->
                         </div>
                     </div>
                     <br><br>

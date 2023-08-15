@@ -6,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 from friends.exceptions import AlreadyExistsError, AlreadyFriendsError
 
 class FriendsRequest(models.Model):
-    
     from_user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="requester",)
     to_user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="receiver",)
 
